@@ -1,3 +1,5 @@
+export type ForecastMethod = 'moving_average' | 'linear_regression';
+
 export interface ForecastPoint {
   t: number;          // time index
   value: number;      // actual (if available) or forecast
@@ -8,7 +10,7 @@ export interface ForecastPoint {
 
 export interface ForecastResult {
   points: ForecastPoint[];
-  method: 'moving_average' | 'linear_regression';
+  method: ForecastMethod;
   slope: number | null;   // only for linear
   mae: number | null;     // mean absolute error on the training window
 }
@@ -48,7 +50,7 @@ function linearRegression(xs: number[], ys: number[]): { slope: number; intercep
 export function forecast(
   history: number[],
   horizon: number,
-  method: 'moving_average' | 'linear_regression' = 'linear_regression',
+  method: ForecastMethod = 'linear_regression',
 ): ForecastResult {
   if (history.length < 2) {
     throw new Error('forecast requires at least 2 historical points');
